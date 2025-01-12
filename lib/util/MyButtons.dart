@@ -1,20 +1,22 @@
+// ignore_for_file: prefer_const_constructors, must_be_immutable
+
 import 'package:flutter/material.dart';
 
 class MyBtns extends StatelessWidget {
-  final String btnName;
   VoidCallback onPressed;
+  final String text;
 
-  MyBtns({super.key, required this.btnName, required this.onPressed});
+  MyBtns({super.key, required this.onPressed, required this.text});
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
+      color: Colors.deepPurple,
       onPressed: onPressed,
       child: Text(
-        btnName,
+        text,
         style: TextStyle(color: Colors.white),
       ),
-      color: Colors.deepPurple,
     );
   }
 }

@@ -12,6 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _controller = TextEditingController();
+
   List todoItem = [
     ["First itme", false],
     ["second itme", false],
@@ -24,10 +26,21 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void createNewTask() {
+  void submitData() {
+    setState(() {
+      todoItem.add([_controller.text, false]);
+      _controller.clear();
+    });
+    Navigator.of(context).pop();
+  }
+
+  void newTask() {
     showDialog(
       context: context,
-      builder: (context) => DialogBox(),
+      builder: (context) => DialogBox(
+          cancleData: () => Navigator.of(context).pop(),
+          submitData: submitData,
+          controller: _controller),
     );
   }
 
@@ -58,7 +71,7 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => createNewTask(),
+        onPressed: newTask,
         child: Icon(Icons.add),
       ),
     );
