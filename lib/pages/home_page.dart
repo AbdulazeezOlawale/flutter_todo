@@ -14,11 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _controller = TextEditingController();
 
-  List todoItem = [
-    ["First itme", false],
-    ["second itme", false],
-    ["third itme", false],
-  ];
+  List todoItem = [];
 
   void onChanged(bool? value, int index) {
     setState(() {
@@ -44,6 +40,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void deleteItem(int index) {
+    setState(() {
+      todoItem.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +69,7 @@ class _HomePageState extends State<HomePage> {
             taskName: todoItem[index][0],
             taskCompleted: todoItem[index][1],
             onChanged: (p0) => onChanged(p0, index),
+            deleteItem: (p0) => deleteItem(index),
           );
         },
       ),
