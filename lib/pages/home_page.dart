@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:flutter_todo/data/dataBase.dart';
 import 'package:flutter_todo/util/DialogBox.dart';
 import 'package:flutter_todo/util/todo_tile.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,22 +14,38 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // reference the box
+  final _myBox = Hive.box('myBox');
+
   final _controller = TextEditingController();
 
-  List todoItem = [];
+  ToDoDataBase db = ToDoDataBase();
+
+  @override
+  void initState() {
+    if (_myBox.get('todoItem') == null) {
+      db.createInitialData();
+    } else {
+      db.loadData();
+    }
+
+    super.initState();
+  }
 
   void onChanged(bool? value, int index) {
     setState(() {
-      todoItem[index][1] = !todoItem[index][1];
+      db.todoItem[index][1] = !db.todoItem[index][1];
     });
+    db.updateDatabase();
   }
 
   void submitData() {
     setState(() {
-      todoItem.add([_controller.text, false]);
+      db.todoItem.add([_controller.text, false]);
       _controller.clear();
     });
     Navigator.of(context).pop();
+    db.updateDatabase();
   }
 
   void newTask() {
@@ -42,8 +60,12 @@ class _HomePageState extends State<HomePage> {
 
   void deleteItem(int index) {
     setState(() {
-      todoItem.removeAt(index);
+      db.todoItem.removeAt(index);
     });
+  }
+
+  void displayItem() {
+    print("the bane");
   }
 
   @override
@@ -63,13 +85,14 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: ListView.builder(
-        itemCount: todoItem.length,
+        itemCount: db.todoItem.length,
         itemBuilder: (BuildContext context, int index) {
           return TodoTile(
-            taskName: todoItem[index][0],
-            taskCompleted: todoItem[index][1],
+            taskName: db.todoItem[index][0],
+            taskCompleted: db.todoItem[index][1],
             onChanged: (p0) => onChanged(p0, index),
             deleteItem: (p0) => deleteItem(index),
+            onPressed: () => displayItem(),
           );
         },
       ),

@@ -8,13 +8,15 @@ class TodoTile extends StatelessWidget {
   final bool taskCompleted;
   Function(bool?)? onChanged;
   Function(BuildContext) deleteItem;
+  VoidCallback onPressed;
 
   TodoTile(
       {super.key,
       required this.taskName,
       required this.taskCompleted,
       required this.onChanged,
-      required this.deleteItem});
+      required this.deleteItem,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +47,14 @@ class TodoTile extends StatelessWidget {
                           ? TextDecoration.lineThrough
                           : TextDecoration.none),
                 ),
+                MaterialButton(
+                  color: Colors.black,
+                  onPressed: () => onPressed,
+                  child: Text(
+                    'data',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )
               ],
             ),
           ),
